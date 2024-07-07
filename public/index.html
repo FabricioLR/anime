@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #main{
+            width: 100%;
+            background-color: rgb(32, 30, 30);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (max-width: 800px){
+            #recommended_info{
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        #recommended{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #recommended_name{
+            width: 100%;
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            font-size: 20px;
+        }
+        #recommended_info{
+            width: 90%;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #recommended_image{
+            width: 300px;
+            height: 380px;
+        }
+        #recommended_sinopse{
+            margin-left: 20px;
+            color: rgb(216, 216, 216);
+        }
+        .recommended_watch{
+            width: 80%;
+            height: 40px;
+            background-color: rgb(236, 53, 53);
+            margin-top: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #releases_title{
+            width: 95%;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #releases_title_title{
+            color: white;
+            font-size: 16px;
+        }
+        #releases_title_more{
+            color: rgb(206, 206, 206);
+            font-size: 16px;
+        }
+        #releases{
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            margin-top: 5px;
+        }
+
+        #recents_title{
+            width: 95%;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #recents_title_title{
+            color: white;
+            font-size: 16px;
+        }
+        #recents_title_more{
+            color: rgb(206, 206, 206);
+            font-size: 16px;
+        }
+        #recents{
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            margin-top: 5px;
+        }
+
+        #most_watched_title{
+            width: 95%;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #most_watched_title_title{
+            color: white;
+            font-size: 16px;
+        }
+        #most_watched_title_more{
+            color: rgb(206, 206, 206);
+            font-size: 16px;
+        }
+        #most_watched{
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            margin-top: 5px;
+        }
+
+        #latest_ovas_title{
+            width: 95%;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #latest_ovas_title_title{
+            color: white;
+            font-size: 16px;
+        }
+        #latest_ovas_title_more{
+            color: rgb(206, 206, 206);
+            font-size: 16px;
+        }
+        #latest_ovas{
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            margin-top: 5px;
+        }
+
+        #latest_movies_title{
+            width: 95%;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+        #latest_movies_title_title{
+            color: white;
+            font-size: 16px;
+        }
+        #latest_movies_title_more{
+            color: rgb(206, 206, 206);
+            font-size: 16px;
+        }
+        #latest_movies{
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            margin-top: 5px;
+        }
+
+
+        #episodios{
+            width: 100%;
+            background-color: rgb(32, 30, 30);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .episodio{
+            width: 95%;
+            background-color: rgb(45, 43, 43);;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .player_sd{
+            margin-right: 10px;
+        }
+        .episodio_number{
+            width: 95%;
+            margin-top: 5px;
+            font-size: 18px;
+            color: rgb(218, 218, 218);
+        }
+        .players{
+            width: 95%;
+            display: flex;
+            color: rgb(218, 218, 218);
+            font-size: 16px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+
+
+        #watch_video{
+            width: 100%;
+            height: 100vh;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div id="main"></div>
+    <script>
+        async function get_anime(id, name){
+            document.location.href = "episodios.html?id=" + id + "&name=" + name;
+        }
+
+        (async () => {
+            const response = await fetch("https://api.shinigame.online/app/home", {
+                method: "GET"
+            })
+
+            const data = await response.json();
+
+            const div1 = document.createElement("div");
+            const p1 = document.createElement("p");
+            const div2 = document.createElement("div");
+            const img1 = document.createElement("img");
+            const p2 = document.createElement("p");
+            const p3 = document.createElement("p");
+
+            div1.id = "recommended";
+            p1.id = "recommended_name";
+            p1.innerText = data.recommended.name;
+            div2.id = "recommended_info";
+            img1.id = "recommended_image";
+            img1.src = data.recommended.cover_url;
+            p2.id = "recommended_sinopse";
+            p2.innerText = data.recommended.description.slice(0, 200);
+            p3.className = "recommended_watch";
+            p3.id = data.recommended.id;
+            p3.innerText = "Assistir";
+
+            p3.addEventListener("click", (e) => {
+                get_anime(e.target.id, data.recommended.name);
+            })
+
+            div1.appendChild(p1);
+            div2.appendChild(img1);
+            div2.appendChild(p2);
+            div1.appendChild(div2);
+            div1.appendChild(p3);
+
+            const releases = document.createElement("div");
+            const releases_title = document.createElement("p");
+            const releases_more = document.createElement("p");
+
+            releases.id = "releases_title";
+            releases_title.id = "releases_title_title"
+            releases_title.innerText = "Ultimas Atualizações";
+            releases_more.id = "releases_title_more";
+            releases_more.innerText = "Ver mais";
+
+            releases_more.addEventListener("click", (e) => {
+                document.location.href = "more.html?sort=releases&page=1";
+            })
+
+            releases.appendChild(releases_title);
+            releases.appendChild(releases_more);
+
+            const div3 = document.createElement("div");
+
+            div3.id = "releases";
+
+            data.releases.map(release => {
+                const img2 = document.createElement("img");
+                img2.id = release.id;
+                img2.src = release.cover_url;
+                div3.appendChild(img2);
+                img2.addEventListener("click", (e) => {
+                    get_anime(e.target.id, release.name);
+                })
+            })
+
+            const recents = document.createElement("div");
+            const recents_title = document.createElement("p");
+            const recents_more = document.createElement("p");
+
+            recents.id = "recents_title";
+            recents_title.id = "recents_title_title"
+            recents_title.innerText = "Adicionados Recentemente";
+            recents_more.id = "recents_title_more";
+            recents_more.innerText = "Ver mais";
+
+            recents_more.addEventListener("click", (e) => {
+                document.location.href = "more.html?sort=recents&page=1";
+            })
+
+            recents.appendChild(recents_title);
+            recents.appendChild(recents_more);
+
+            const div4 = document.createElement("div");
+
+            div4.id = "recents";
+
+            data.recents.map(recent => {
+                const img3 = document.createElement("img");
+                img3.id = recent.id;
+                img3.src = recent.cover_url;
+                div4.appendChild(img3);
+                img3.addEventListener("click", (e) => {
+                    get_anime(e.target.id, recent.name);
+                })
+            })
+
+            const most_watched = document.createElement("div");
+            const most_watched_title = document.createElement("p");
+            const most_watched_more = document.createElement("p");
+
+            most_watched.id = "most_watched_title";
+            most_watched_title.id = "most_watched_title_title"
+            most_watched_title.innerText = "Mais Assistidos";
+            most_watched_more.id = "most_watched_title_more";
+            most_watched_more.innerText = "Ver mais";
+
+            most_watched_more.addEventListener("click", (e) => {
+                document.location.href = "more.html?sort=mostWatched&page=1";
+            })
+
+            most_watched.appendChild(most_watched_title);
+            most_watched.appendChild(most_watched_more);
+
+            const div5 = document.createElement("div");
+
+            div5.id = "most_watched";
+
+            data.most_watched.map(most_watched => {
+                const img4 = document.createElement("img");
+                img4.id = most_watched.id;
+                img4.src = most_watched.cover_url;
+                div5.appendChild(img4);
+                img4.addEventListener("click", (e) => {
+                    get_anime(e.target.id, most_watched.name);
+                })
+            })
+
+            const latest_ovas = document.createElement("div");
+            const latest_ovas_title = document.createElement("p");
+            const latest_ovas_more = document.createElement("p");
+
+            latest_ovas.id = "latest_ovas_title";
+            latest_ovas_title.id = "latest_ovas_title_title"
+            latest_ovas_title.innerText = "Ultimos Filmes Adicionados";
+            latest_ovas_more.id = "latest_ovas_title_more";
+            latest_ovas_more.innerText = "Ver mais";
+
+            latest_ovas_more.addEventListener("click", (e) => {
+                document.location.href = "more.html?sort=latestOvas&page=1";
+            })
+
+            latest_ovas.appendChild(latest_ovas_title);
+            latest_ovas.appendChild(latest_ovas_more);
+
+            const div6 = document.createElement("div");
+
+            div6.id = "latest_ovas";
+
+            data.latest_ovas.map(latest_ova => {
+                const img5 = document.createElement("img");
+                img5.id = latest_ova.id;
+                img5.src = latest_ova.cover_url;
+                div6.appendChild(img5);
+                img5.addEventListener("click", (e) => {
+                    get_anime(e.target.id, latest_ova.name);
+                })
+            })
+
+            const latest_movies = document.createElement("div");
+            const latest_movies_title = document.createElement("p");
+            const latest_movies_more = document.createElement("p");
+
+            latest_movies.id = "latest_movies_title";
+            latest_movies_title.id = "latest_movies_title_title"
+            latest_movies_title.innerText = "Ultimos OVAs Adicionados";
+            latest_movies_more.id = "latest_movies_title_more";
+            latest_movies_more.innerText = "Ver mais";
+
+            latest_movies_more.addEventListener("click", (e) => {
+                document.location.href = "more.html?sort=latestMovies&page=1";
+            })
+
+            latest_movies.appendChild(latest_movies_title);
+            latest_movies.appendChild(latest_movies_more);
+
+            const div7 = document.createElement("div");
+
+            div7.id = "latest_movies";
+
+            data.latest_movies.map(latest_movie => {
+                const img6 = document.createElement("img");
+                img6.id = latest_movie.id;
+                img6.src = latest_movie.cover_url;
+                div7.appendChild(img6);
+                img6.addEventListener("click", (e) => {
+                    get_anime(e.target.id, latest_movie.name);
+                })
+            })
+
+            document.getElementById("main").appendChild(div1);
+            document.getElementById("main").appendChild(releases);
+            document.getElementById("main").appendChild(div3);
+            document.getElementById("main").appendChild(recents);
+            document.getElementById("main").appendChild(div4);
+            document.getElementById("main").appendChild(most_watched);
+            document.getElementById("main").appendChild(div5);
+            document.getElementById("main").appendChild(latest_ovas);
+            document.getElementById("main").appendChild(div6);
+            document.getElementById("main").appendChild(latest_movies);
+            document.getElementById("main").appendChild(div7);
+
+            console.log(data)
+        })()
+    </script>
+</body>
+</html>
