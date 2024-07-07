@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;   
+        }
+
+        #categories{
+            width: 100%;
+            min-height: 100vh;
+            background-color: rgb(32, 30, 30);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .category{
+            width: 98%;
+            height: 45px;
+            border-bottom: 1px solid #2b2828;
+            display: flex;
+            align-items: center;
+            color: #bbb9b9;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        *::-webkit-scrollbar {
+            background-color: rgb(32, 30, 30);
+            width: 10px;
+            height: 10px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background-color: rgb(32, 30, 30);
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background-color: #39393b;
+            border-radius: 16px;
+        }
+
+        *::-webkit-scrollbar-button {
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <div id="categories">
+    </div>
+    <script>        
+        async function get_category(id){
+            document.location.href = "episodios.html?id=" + id + "&name=" + name;
+        }
+
+        (async () => {
+            const response = await fetch("https://api.shinigame.online/categories?limit=1000", {
+                method: "GET"
+            })
+
+            const data = await response.json();
+
+            data.data.map(caterogy => {
+                const p = document.createElement("p")
+
+                p.className = "category"
+                p.id = caterogy.id
+                p.innerText = caterogy.name
+
+                document.getElementById("categories").appendChild(p)
+                p.addEventListener("click", () => {
+                    document.location.href = "category.html?category=" + caterogy.name + "&page=1";
+                })
+            })
+
+            console.log(data)
+        })()
+    </script>
+</body>
+</html>

@@ -10,7 +10,7 @@
             padding: 0px;   
         }
 
-        #more{
+        #search{
             width: 100%;
             min-height: 100vh;
             background-color: rgb(32, 30, 30);
@@ -18,12 +18,35 @@
             flex-direction: column;
             align-items: center;
         }
+        #search_local{
+            width: 100%;
+            height: 50px;
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(32, 30, 30);
+        }
+        #search_local input{
+            width: 95%;
+            height: 25px;
+            border-radius: 0px;
+            border: 1px solid black;
+            padding: 5px;
+            font-size: 17px;
+        }
+        #search_local input:focus{
+            outline: none;
+        }
         .anime{
             width: 300px;
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 20px;
+        }
+        #animes{
+            margin-top: 60px;
         }
         .anime p{
             width: 95%;
@@ -56,18 +79,27 @@
     </style>
 </head>
 <body>
-    <div id="more"></div>
-    <script>
+    <div id="search">
+        <div id="search_local">
+            <input id="serch_name" type="text" placeholder="Filtre por nome">
+        </div>
+        <div id="animes"></div>
+    </div>
+    <script>        
         async function get_anime(id, name){
             document.location.href = "episodios.html?id=" + id + "&name=" + name;
         }
 
-        async function get_more(sort, page){
-            const response = await fetch("https://api.shinigame.online/app/medias/view-more?sort=" + sort + "&page=" + page + "&limit=40", {
+        async function search_animes(search, page){
+            const response = await fetch("https://api.shinigame.online/app/medias/search?search=" + search + "&page=" + page + "&limit=20&type=Anime", {
                 method: "GET"
             })
 
             const data = await response.json();
+
+            /* const div1 = document.createElement("div");
+            div1.id = "animes"
+            document.getElementById("search").appendChild(div1); */
 
             data.data.map(anime => {
                 const div = document.createElement("div");
@@ -82,29 +114,40 @@
                 div.appendChild(p);
                 div.appendChild(img)
 
-                document.getElementById("more").appendChild(div);
+                document.getElementById("animes").appendChild(div);
                 div.addEventListener("click", () => {
                     get_anime(anime.id, anime.name);
                 })
             })
+
+            console.log(data)
         }
 
         (async () => {
             const searchParams = new URLSearchParams(window.location.search);
-            const sort = searchParams.get("sort")
+            var search = searchParams.get("search")
             var page = searchParams.get("page")
 
             window.onscroll = function(ev) {
                 if ((window.innerHeight + Math.round(window.scrollY)) >= document.body.offsetHeight) {
                     page = Number(page) + 1
-                    get_more(sort, page)
-                    window.history.pushState({}, "", "more.html?sort=" + sort + "&page=" + page);
+
+                    search_animes(search, page)
+                    window.history.pushState({}, "", "search.html?search=" + search + "&page=" + page);
                 }
             };
-            
-            await get_more(sort, page);
-        })()
 
+            document.getElementById("serch_name").addEventListener("change", (e) => {
+                //document.getElementById("animes").remove();
+                document.getElementById("animes").innerHTML = ""
+                page = 1
+                search = e.target.value
+                search_animes(search, page)
+                window.history.pushState({}, "", "search.html?search=" + search + "&page=" + page);
+            })
+            
+            await search_animes(search, page);
+        })()
     </script>
 </body>
 </html>
